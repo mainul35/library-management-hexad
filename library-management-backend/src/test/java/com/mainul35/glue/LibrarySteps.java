@@ -109,6 +109,74 @@ public class LibrarySteps {
     @And("the book is removed from the library")
     public void theBookIsRemovedFromTheLibrary() {
         Assertions.assertEquals(2, libraryStatus.getBorrowedBooks().size());
-        Assertions.assertEquals(1, libraryStatus.getRemainingBooks().size());
+        Assertions.assertEquals(
+                (libraryService.getAllBooks().size() - libraryStatus.getBorrowedBooks().size()),
+                libraryStatus.getRemainingBooks().size()
+        );
+    }
+
+    @Given("there are more than one copy of a book in the library")
+    public void thereAreMoreThanOneCopyOfABookInTheLibrary() {
+        var booksInLibrary = libraryService.getAllBooks();
+        booksInLibrary.stream()
+                .filter(book -> doesListContain(book, booksInLibrary))
+                .findAny().ifPresent(Assertions::assertNotNull);
+    }
+
+    private boolean doesListContain(Book book, List<Book> list) {
+        for (Book b : list) if (b.getIsbn().equals(book.getIsbn())) return true;
+        return false;
+    }
+
+    @Then("one copy of the book is added to my borrowed list")
+    public void oneCopyOfTheBookIsAddedToMyBorrowedList() {
+        Assertions.assertTrue(this.libraryStatus.getBorrowedBooks().stream()
+                .anyMatch(book -> otherCopyExistsInLibrary(book, libraryStatus.getRemainingBooks())));
+    }
+
+    private boolean otherCopyExistsInLibrary(Book book, List<Book> remainingBooks) {
+        return remainingBooks.stream().anyMatch(book1 -> book.getIsbn().equals(book1.getIsbn()));
+    }
+
+    @And("the library has at least one copy of the book left")
+    public void theLibraryHasAtLeastOneCopyOfTheBookLeft() {
+        Assertions.assertTrue(this.libraryStatus.getRemainingBooks().stream()
+                .anyMatch(book -> otherCopyExistsInLibrary(book, libraryStatus.getBorrowedBooks())));
+    }
+
+    @Given("there is only one copy of a book in the library")
+    public void thereIsOnlyOneCopyOfABookInTheLibrary() {
+        var onlyBook = libraryStatus.getRemainingBooks()
+                .stream()
+                .filter(book -> book.getBookName().equals("Thread Programming"))
+                .findAny().get();
+        Assertions.assertNotNull(onlyBook);
+    }
+
+    @When("I choose the book to add to my borrowed list")
+    public void iChooseTheBookToAddToMyBorrowedList() {
+        BorrowingBooks borrowingBooks = new BorrowingBooks();
+        List<String> bookIds = new ArrayList<>();
+        bookIds.add("adea8964-053c-4027-b2a0-77de7f6ea799");
+        borrowingBooks.setBookIds(bookIds);
+        libraryStatus = testRestTemplate.postForObject("/api/books/borrow", borrowingBooks, LibraryStatus.class);
+    }
+
+
+    @Then("only copy of the book is added to my borrowed list")
+    public void onlyCopyOfTheBookIsAddedToMyBorrowedList() {
+        var borrowedBook = libraryStatus.getBorrowedBooks().stream()
+                .filter(book -> book.getBookName().equals("Thread Programming"))
+                .findAny().get();
+        Assertions.assertNotNull(borrowedBook);
+    }
+
+
+    @And("the only book is removed from the library")
+    public void theOnlyBookIsRemovedFromTheLibrary() {
+        Assertions.assertTrue(
+                libraryStatus.getRemainingBooks().stream()
+                        .noneMatch(book -> book.getBookName().equals("Thread Programming"))
+        );
     }
 }
