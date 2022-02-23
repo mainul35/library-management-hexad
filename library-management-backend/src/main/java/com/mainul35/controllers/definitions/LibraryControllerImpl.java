@@ -15,7 +15,6 @@ public class LibraryControllerImpl implements Library{
 
     private final LibraryService libraryService;
 
-
     @Autowired
     public LibraryControllerImpl(LibraryService libraryService) {
         this.libraryService = libraryService;

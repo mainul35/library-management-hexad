@@ -16,5 +16,23 @@
     "bookName": "Thread Programming",
     "authorName": "ANM Bazlur Rahman",
     "isbn": "978-984-34-3691-7"
+  },
+  {
+    "id": "f76b7137-2a23-4654-9395-9916c7c1d460",
+    "bookName": "Java Programming",
+    "authorName": "ANM Bazlur Rahman",
+    "isbn": "978-984-92164-4-5"
+  },
+  {
+    "id": "5876caca-290d-406a-9869-646f58c0d668",
+    "bookName": "Advanced Java Programming",
+    "authorName": "ANM Bazlur Rahman",
+    "isbn": "978-984-8042-07-6"
+  },
+  {
+    "id": "adea8964-053c-4027-b2a0-77de7f6ea799",
+    "bookName": "Thread Programming",
+    "authorName": "ANM Bazlur Rahman",
+    "isbn": "978-984-34-3691-7"
   }
 ]

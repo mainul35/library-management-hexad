@@ -12,16 +12,10 @@ import java.util.List;
 @Service
 public class LibraryService {
 
-    List<Book> books;
+    final List<Book> books;
 
     public LibraryService() {
         books = new ArrayList<>();
-//        books = objectMapper
-//                .readValue (
-//                        resourceLoader.getResource ("classpath:books.json").getInputStream(),
-//                        new TypeReference<ArrayList<Book>>() {
-//                        }
-//                );
     }
 
     public List<Book> getAllBooks() {
@@ -32,8 +26,15 @@ public class LibraryService {
         books.addAll(newBooks);
     }
 
-    public void setBooks(List<Book> newBooks) {
-        this.books = newBooks;
+    public void addBook(Book newBook) {
+        var found = books.stream().anyMatch(book -> book.getId().equals(newBook.getId()));
+        if (!found) {
+            books.add(newBook);
+        } else {
+            var filteredBook = books.stream().filter(book -> book.getId().equals(newBook.getId())).findFirst().get();
+            books.remove(filteredBook);
+            books.add(newBook);
+        }
     }
 
     public LibraryStatus borrow(BorrowingBooks borrowingBooks) {

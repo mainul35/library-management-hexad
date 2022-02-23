@@ -80,7 +80,9 @@ public class LibrarySteps {
                         new TypeReference<ArrayList<Book>>() {
                         }
                 );
-        libraryService.setBooks(books);
+        books.forEach(book -> {
+            libraryService.addBook(book);
+        });
         this.expectedBooks.addAll(libraryService.getAllBooks());
     }
 
