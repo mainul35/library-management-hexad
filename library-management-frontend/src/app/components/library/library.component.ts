@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-research-frequency',
-  templateUrl: './research.component.html',
-  styleUrls: ['./research.component.css']
+  selector: 'app-library',
+  templateUrl: './library.component.html',
+  styleUrls: ['./library.component.css']
 })
-export class ResearchComponent implements OnInit {
+export class LibraryComponent implements OnInit {
   givenWord ?: string;
   notebookEntries ?: string;
   frequencies: number = 0;

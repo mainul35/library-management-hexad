@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { ResearchComponent } from './components/research/research.component';
+import { LibraryComponent } from './components/library/library.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import {FormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
@@ -13,7 +13,7 @@ import {HttpClientModule} from "@angular/common/http";
   declarations: [
     AppComponent,
     NavbarComponent,
-    ResearchComponent,
+    LibraryComponent,
     NotFoundComponent
   ],
   imports: [

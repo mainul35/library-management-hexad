@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {ResearchComponent} from "./components/research/research.component";
+import {LibraryComponent} from "./components/library/library.component";
 import {NotFoundComponent} from "./components/not-found/not-found.component";
 
 const routes: Routes = [
-  {path: '', component: ResearchComponent},
-  {path: 'research', component: ResearchComponent},
+  {path: '', component: LibraryComponent},
+  {path: 'research', component: LibraryComponent},
   {path: '**', component: NotFoundComponent},
 ];
 

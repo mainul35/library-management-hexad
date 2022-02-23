@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  RESEARCH_SERVICE: 'http://localhost:8080/research'
+  RESEARCH_SERVICE: 'http://localhost:8080/api'
 };
 
 /*
