@@ -14,7 +14,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -68,8 +68,8 @@ public class LibrarySteps {
 
     @Then("^I see an empty library$")
     public void iSeeAnEmptyLibrary() {
-        Assert.assertEquals(expectedBooks.size(), actualBooks.size());
-        Assert.assertEquals(0, actualBooks.size());
+        Assertions.assertEquals(expectedBooks.size(), actualBooks.size());
+        Assertions.assertEquals(0, actualBooks.size());
     }
 
     @Given("there are books in the library")
@@ -86,7 +86,7 @@ public class LibrarySteps {
 
     @Then("I see the list of books in the library")
     public void iSeeTheListOfBooksInTheLibrary() {
-        Assert.assertEquals(expectedBooks.size(), actualBooks.size());
+        Assertions.assertEquals(expectedBooks.size(), actualBooks.size());
     }
 
     @When("I choose a book to add to my borrowed list")
@@ -101,12 +101,12 @@ public class LibrarySteps {
 
     @Then("the book is added to my borrowed list")
     public void theBookIsAddedToMyBorrowedList() {
-        Assert.assertFalse(libraryStatus.getBorrowedBooks().isEmpty());
+        Assertions.assertFalse(libraryStatus.getBorrowedBooks().isEmpty());
     }
 
     @And("the book is removed from the library")
     public void theBookIsRemovedFromTheLibrary() {
-        Assert.assertEquals(2, libraryStatus.getBorrowedBooks().size());
-        Assert.assertEquals(1, libraryStatus.getRemainingBooks().size());
+        Assertions.assertEquals(2, libraryStatus.getBorrowedBooks().size());
+        Assertions.assertEquals(1, libraryStatus.getRemainingBooks().size());
     }
 }
