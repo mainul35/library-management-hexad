@@ -1,13 +1,16 @@
 package com.mainul35.dtos.request;
 
-import lombok.Getter;
-import lombok.ToString;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class BorrowingBooks {
-    List<String> bookIds = new ArrayList<>(2);
+    List<String> bookIds;
 }

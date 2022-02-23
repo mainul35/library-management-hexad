@@ -2,6 +2,7 @@ package com.mainul35.controllers.definitions;
 
 import com.mainul35.dtos.request.BorrowingBooks;
 import com.mainul35.dtos.response.Book;
+import com.mainul35.dtos.response.LibraryStatus;
 import com.mainul35.services.LibraryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,9 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@CrossOrigin(origins = "${cross.origin}")
 @RestController
-@RequestMapping("/books")
 public class LibraryControllerImpl implements Library{
 
     private final LibraryService libraryService;
@@ -27,13 +26,13 @@ public class LibraryControllerImpl implements Library{
         this.libraryService = libraryService;
     }
 
-    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Override
     public ResponseEntity<List<Book>> getBooks() {
         return ResponseEntity.ok(libraryService.getAllBooks());
     }
 
     @Override
-    public ResponseEntity<?> getSimilarWords(BorrowingBooks borrowingBooks) {
-        return null;
+    public ResponseEntity<LibraryStatus> borrow(BorrowingBooks borrowingBooks) {
+        return ResponseEntity.ok(libraryService.borrow(borrowingBooks));
     }
 }

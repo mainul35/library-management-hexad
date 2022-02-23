@@ -7,3 +7,8 @@ Feature:
     Given there are books in the library
     When I view the books in the library
     Then I see the list of books in the library
+
+    Given there are books in the library
+    When I choose a book to add to my borrowed list
+    Then the book is added to my borrowed list
+    And the book is removed from the library

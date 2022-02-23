@@ -4,9 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mainul35.BackendApplication;
+import com.mainul35.dtos.request.BorrowingBooks;
 import com.mainul35.dtos.response.Book;
+import com.mainul35.dtos.response.LibraryStatus;
 import com.mainul35.services.LibraryService;
 import io.cucumber.java.Before;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -22,10 +25,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@SpringBootTest(classes = {BackendApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @CucumberContextConfiguration
-@SpringBootTest(classes = {BackendApplication.class},
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class BookSteps {
+public class LibrarySteps {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
@@ -33,19 +35,21 @@ public class BookSteps {
     @Autowired
     private ResourceLoader resourceLoader;
 
+    private ObjectMapper objectMapper;
+
     @Autowired
     private LibraryService libraryService;
 
-    private ObjectMapper objectMapper;
-
     private List<Book> expectedBooks;
     private List<Book> actualBooks;
+    private LibraryStatus libraryStatus;
 
     @Before
     public void setup() {
         objectMapper = new ObjectMapper();
         expectedBooks = new ArrayList<>();
         actualBooks = new ArrayList<>();
+        this.libraryStatus = new LibraryStatus();
     }
 
     @Given("^there are no books in the library$")
@@ -76,12 +80,33 @@ public class BookSteps {
                         new TypeReference<ArrayList<Book>>() {
                         }
                 );
-        libraryService.addBooks(books);
+        libraryService.setBooks(books);
         this.expectedBooks.addAll(libraryService.getAllBooks());
     }
 
     @Then("I see the list of books in the library")
     public void iSeeTheListOfBooksInTheLibrary() {
         Assert.assertEquals(expectedBooks.size(), actualBooks.size());
+    }
+
+    @When("I choose a book to add to my borrowed list")
+    public void iChooseABookToAddToMyBorrowedList() {
+        BorrowingBooks borrowingBooks = new BorrowingBooks();
+        List<String> bookIds = new ArrayList<>();
+        bookIds.add("f76b7137-2a23-4654-9395-9916c7c1d460");
+        bookIds.add("5876caca-290d-406a-9869-646f58c0d668");
+        borrowingBooks.setBookIds(bookIds);
+        libraryStatus = testRestTemplate.postForObject("/api/books/borrow", borrowingBooks, LibraryStatus.class);
+    }
+
+    @Then("the book is added to my borrowed list")
+    public void theBookIsAddedToMyBorrowedList() {
+        Assert.assertFalse(libraryStatus.getBorrowedBooks().isEmpty());
+    }
+
+    @And("the book is removed from the library")
+    public void theBookIsRemovedFromTheLibrary() {
+        Assert.assertEquals(2, libraryStatus.getBorrowedBooks().size());
+        Assert.assertEquals(1, libraryStatus.getRemainingBooks().size());
     }
 }
