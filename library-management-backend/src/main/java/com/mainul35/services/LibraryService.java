@@ -36,6 +36,11 @@ public class LibraryService {
         }
     }
 
+    public LibraryStatus addAllBooks(List<Book> newBooks) {
+        newBooks.forEach(this::addBook);
+        return libraryStatus;
+    }
+
     public LibraryStatus borrow(BorrowingBooks borrowingBooks) {
         if (borrowingBooks.getBookIds() == null) {
             throw new NoSuchElementException("No books to borrow");

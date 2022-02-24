@@ -84,12 +84,14 @@ public class LibrarySteps {
         books.forEach(book -> {
             libraryService.addBook(book);
         });
-        this.expectedBooks.addAll(libraryService.getAllBooks());
+        var returningBooks = new ReturningBooks();
+        returningBooks.setBooks(libraryService.getAllBooks());
+        libraryStatus = testRestTemplate.postForObject("/api/books/add", returningBooks, LibraryStatus.class);
     }
 
     @Then("I see the list of books in the library")
     public void iSeeTheListOfBooksInTheLibrary() {
-        Assertions.assertEquals(expectedBooks.size(), actualBooks.size());
+        Assertions.assertEquals(libraryService.getAllBooks().size(), actualBooks.size());
     }
 
     @When("I choose a book to add to my borrowed list")

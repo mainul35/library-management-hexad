@@ -27,6 +27,11 @@ public class LibraryControllerImpl implements Library{
     }
 
     @Override
+    public ResponseEntity<LibraryStatus> addBooks(ReturningBooks returningBooks) {
+        return ResponseEntity.ok(libraryService.addAllBooks(returningBooks.getBooks()));
+    }
+
+    @Override
     public ResponseEntity<LibraryStatus> borrow(BorrowingBooks borrowingBooks) {
         return ResponseEntity.ok(libraryService.borrow(borrowingBooks));
     }
