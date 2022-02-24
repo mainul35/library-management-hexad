@@ -26,6 +26,7 @@ Feature:
     Then only copy of the book is added to my borrowed list
     And the only book is removed from the library
 
+    # case 4
     Given I have 2 books in my borrowed list
     When I return one book to the library
     Then the book is removed from my borrowed list
