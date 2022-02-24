@@ -56,6 +56,13 @@ public class LibraryService {
         return libraryStatus;
     }
 
+    public LibraryStatus returnOne(Book bookToReturn) {
+        var libStat = new LibraryStatus(libraryStatus.getBorrowedBooks(), libraryStatus.getRemainingBooks());
+        libStat.getBorrowedBooks().remove(bookToReturn);
+        libStat.getRemainingBooks().add(bookToReturn);
+        return libStat;
+    }
+
     public LibraryStatus returnAll(List<Book> borrowedBooks) {
         if (borrowedBooks == null) {
             throw new NoSuchElementException("No books to return");
