@@ -1,6 +1,7 @@
 package com.mainul35.controllers.definitions;
 
 import com.mainul35.dtos.request.BorrowingBooks;
+import com.mainul35.dtos.request.ReturningBooks;
 import com.mainul35.dtos.response.Book;
 import com.mainul35.dtos.response.LibraryStatus;
 import com.mainul35.services.LibraryService;
@@ -28,5 +29,10 @@ public class LibraryControllerImpl implements Library{
     @Override
     public ResponseEntity<LibraryStatus> borrow(BorrowingBooks borrowingBooks) {
         return ResponseEntity.ok(libraryService.borrow(borrowingBooks));
+    }
+
+    @Override
+    public ResponseEntity<LibraryStatus> toReturn(ReturningBooks returningBooks) {
+        return ResponseEntity.ok(libraryService.returnAll(returningBooks.getBooks()));
     }
 }

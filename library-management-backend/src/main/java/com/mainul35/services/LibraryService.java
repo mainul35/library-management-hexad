@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class LibraryService {
@@ -36,6 +37,9 @@ public class LibraryService {
     }
 
     public LibraryStatus borrow(BorrowingBooks borrowingBooks) {
+        if (borrowingBooks.getBookIds() == null) {
+            throw new NoSuchElementException("No books to borrow");
+        }
         var remainingBooks = new ArrayList<>(libraryStatus.getRemainingBooks());
         remainingBooks.stream()
                 .filter(book -> borrowingBooks.getBookIds().contains(book.getId()))
@@ -60,9 +64,14 @@ public class LibraryService {
     }
 
     public LibraryStatus returnAll(List<Book> borrowedBooks) {
+        if (borrowedBooks == null) {
+            throw new NoSuchElementException("No books to return");
+        }
         var libStat = new LibraryStatus(libraryStatus.getBorrowedBooks(), libraryStatus.getRemainingBooks());
-        libStat.getBorrowedBooks().removeAll(borrowedBooks);
-        libStat.getRemainingBooks().addAll(borrowedBooks);
+        for (var book : borrowedBooks) {
+            libStat.getBorrowedBooks().removeIf(book1 -> book1.getId().equals(book.getId()));
+            libStat.getRemainingBooks().add(book);
+        }
         return libStat;
     }
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mainul35.BackendApplication;
 import com.mainul35.dtos.request.BorrowingBooks;
+import com.mainul35.dtos.request.ReturningBooks;
 import com.mainul35.dtos.response.Book;
 import com.mainul35.dtos.response.LibraryStatus;
 import com.mainul35.services.LibraryService;
@@ -194,7 +195,10 @@ public class LibrarySteps {
     @When("I return one book to the library")
     public void iReturnOneBookToTheLibrary() {
         var bookToReturn = libraryService.getLibraryStatus().getBorrowedBooks().get(0);
-        libraryStatus = libraryService.returnOne(bookToReturn);
+        var returningBooks = new ReturningBooks();
+        returningBooks.setBooks(new ArrayList<>());
+        returningBooks.getBooks().add(bookToReturn);
+        libraryStatus = testRestTemplate.postForObject("/api/books/return", returningBooks, LibraryStatus.class);
         Assertions.assertEquals(1, libraryStatus.getBorrowedBooks().size());
     }
 
@@ -210,7 +214,10 @@ public class LibrarySteps {
 
     @When("I return both books to the library")
     public void iReturnBothBooksToTheLibrary() {
-        libraryService.returnAll(libraryService.getLibraryStatus().getBorrowedBooks());
+        var returningBooks = new ReturningBooks();
+        returningBooks.setBooks(new ArrayList<>());
+        returningBooks.getBooks().addAll(libraryService.getLibraryStatus().getBorrowedBooks());
+        libraryStatus = testRestTemplate.postForObject("/api/books/return", returningBooks, LibraryStatus.class);
         Assertions.assertEquals(0, libraryService.getLibraryStatus().getBorrowedBooks().size());
     }
 

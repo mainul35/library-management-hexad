@@ -7,12 +7,14 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.Arrays;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @ControllerAdvice
 public class RestExceptionHandler {
 
     public static final String LIMIT_REACHED_ERROR = "limit_reached_error";
+    public static final String NO_ELEMENT_PRESENT = "no_element_present";
 
     /**
      * @param ex      LimitReachedException.class
@@ -23,6 +25,17 @@ public class RestExceptionHandler {
         ErrorResponse response = new ErrorResponse(LIMIT_REACHED_ERROR, ex.getMessage());
         this.printStackTrace(ex);
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * @param ex      LimitReachedException.class
+     * @return the ErrorResponse object
+     */
+    @ExceptionHandler(value = {NoSuchElementException.class})
+    protected ResponseEntity<?> noSuchElement(NoSuchElementException ex) {
+        ErrorResponse response = new ErrorResponse(NO_ELEMENT_PRESENT, ex.getMessage());
+        this.printStackTrace(ex);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     private void printStackTrace(Exception ex) {
