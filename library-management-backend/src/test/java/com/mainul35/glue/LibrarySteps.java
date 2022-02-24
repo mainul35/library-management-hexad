@@ -99,6 +99,9 @@ public class LibrarySteps {
         bookIds.add("5876caca-290d-406a-9869-646f58c0d668");
         borrowingBooks.setBookIds(bookIds);
         libraryStatus = testRestTemplate.postForObject("/api/books/borrow", borrowingBooks, LibraryStatus.class);
+        Assertions.assertNotNull(libraryStatus);
+        Assertions.assertEquals(2, libraryStatus.getBorrowedBooks().size());
+        Assertions.assertEquals(3, libraryStatus.getRemainingBooks().size());
     }
 
     @Then("the book is added to my borrowed list")
@@ -110,7 +113,7 @@ public class LibrarySteps {
     public void theBookIsRemovedFromTheLibrary() {
         Assertions.assertEquals(2, libraryStatus.getBorrowedBooks().size());
         Assertions.assertEquals(
-                (libraryService.getAllBooks().size() - libraryStatus.getBorrowedBooks().size()),
+                libraryService.getAllBooks().size(),
                 libraryStatus.getRemainingBooks().size()
         );
     }
@@ -155,17 +158,20 @@ public class LibrarySteps {
 
     @When("I choose the book to add to my borrowed list")
     public void iChooseTheBookToAddToMyBorrowedList() {
+        libraryStatus = libraryService.returnOne(libraryService.getLibraryStatus().getBorrowedBooks().get(0));
         BorrowingBooks borrowingBooks = new BorrowingBooks();
         List<String> bookIds = new ArrayList<>();
         bookIds.add("adea8964-053c-4027-b2a0-77de7f6ea799");
         borrowingBooks.setBookIds(bookIds);
-        libraryStatus = testRestTemplate.postForObject("/api/books/borrow", borrowingBooks, LibraryStatus.class);
+        var libStat = testRestTemplate.postForObject("/api/books/borrow", borrowingBooks, LibraryStatus.class);
+        Assertions.assertEquals(2, libStat.getBorrowedBooks().size());
+        Assertions.assertEquals(3, libStat.getRemainingBooks().size());
     }
 
 
     @Then("only copy of the book is added to my borrowed list")
     public void onlyCopyOfTheBookIsAddedToMyBorrowedList() {
-        var borrowedBook = libraryStatus.getBorrowedBooks().stream()
+        var borrowedBook = libraryService.getLibraryStatus().getBorrowedBooks().stream()
                 .filter(book -> book.getBookName().equals("Thread Programming"))
                 .findAny().get();
         Assertions.assertNotNull(borrowedBook);
@@ -175,8 +181,41 @@ public class LibrarySteps {
     @And("the only book is removed from the library")
     public void theOnlyBookIsRemovedFromTheLibrary() {
         Assertions.assertTrue(
-                libraryStatus.getRemainingBooks().stream()
+                libraryService.getLibraryStatus().getRemainingBooks().stream()
                         .noneMatch(book -> book.getBookName().equals("Thread Programming"))
         );
+    }
+
+    @Given("I have {int} books in my borrowed list")
+    public void iHaveBooksInMyBorrowedList(int count) {
+        Assertions.assertEquals(count, libraryService.getLibraryStatus().getBorrowedBooks().size());
+    }
+
+    @When("I return one book to the library")
+    public void iReturnOneBookToTheLibrary() {
+        var bookToReturn = libraryService.getLibraryStatus().getBorrowedBooks().get(0);
+        libraryStatus = libraryService.returnOne(bookToReturn);
+        Assertions.assertEquals(1, libraryStatus.getBorrowedBooks().size());
+    }
+
+    @Then("the book is removed from my borrowed list")
+    public void theBookIsRemovedFromMyBorrowedList() {
+        Assertions.assertEquals(1, libraryService.getLibraryStatus().getBorrowedBooks().size());
+    }
+
+    @And("the library reflects the updated stock of the book")
+    public void theLibraryReflectsTheUpdatedStockOfTheBook() {
+        Assertions.assertEquals(libraryService.getAllBooks().size(), libraryService.getLibraryStatus().getRemainingBooks().size());
+    }
+
+    @When("I return both books to the library")
+    public void iReturnBothBooksToTheLibrary() {
+        libraryService.returnAll(libraryService.getLibraryStatus().getBorrowedBooks());
+        Assertions.assertEquals(0, libraryService.getLibraryStatus().getBorrowedBooks().size());
+    }
+
+    @Then("my borrowed list is empty")
+    public void myBorrowedListIsEmpty() {
+        Assertions.assertEquals(0, libraryService.getLibraryStatus().getBorrowedBooks().size());
     }
 }

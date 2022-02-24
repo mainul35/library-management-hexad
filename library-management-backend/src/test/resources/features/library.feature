@@ -25,3 +25,13 @@ Feature:
     When I choose the book to add to my borrowed list
     Then only copy of the book is added to my borrowed list
     And the only book is removed from the library
+
+    Given I have 2 books in my borrowed list
+    When I return one book to the library
+    Then the book is removed from my borrowed list
+    And the library reflects the updated stock of the book
+
+    Given I have 1 books in my borrowed list
+    When I return both books to the library
+    Then my borrowed list is empty
+    And the library reflects the updated stock of the book

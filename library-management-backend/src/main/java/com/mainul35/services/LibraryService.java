@@ -12,47 +12,57 @@ import java.util.List;
 @Service
 public class LibraryService {
 
-    final List<Book> books;
+    final LibraryStatus libraryStatus;
 
     public LibraryService() {
-        books = new ArrayList<>();
+        libraryStatus = new LibraryStatus(new ArrayList<>(), new ArrayList<>());
     }
 
     public List<Book> getAllBooks() {
-        return new ArrayList<>(this.books);
+        return new ArrayList<>(this.libraryStatus.getRemainingBooks());
     }
 
-    public void addBooks(List<Book> newBooks) {
-        books.addAll(newBooks);
+    public LibraryStatus getLibraryStatus() {
+        return new LibraryStatus(libraryStatus.getBorrowedBooks(), libraryStatus.getRemainingBooks());
     }
 
     public void addBook(Book newBook) {
-        var found = books.stream().anyMatch(book -> book.getId().equals(newBook.getId()));
+        var remainingBooks = this.libraryStatus.getRemainingBooks();
+        var found = remainingBooks
+                .stream().anyMatch(book -> book.getId().equals(newBook.getId()));
         if (!found) {
-            books.add(newBook);
-        } else {
-            var filteredBook = books.stream().filter(book -> book.getId().equals(newBook.getId())).findFirst().get();
-            books.remove(filteredBook);
-            books.add(newBook);
+            remainingBooks.add(newBook);
         }
     }
 
     public LibraryStatus borrow(BorrowingBooks borrowingBooks) {
-        var libraryStatus = new LibraryStatus();
-        libraryStatus.setRemainingBooks(books);
-        libraryStatus.setBorrowedBooks(new ArrayList<>());
-        books.stream()
+        var remainingBooks = new ArrayList<>(libraryStatus.getRemainingBooks());
+        remainingBooks.stream()
                 .filter(book -> borrowingBooks.getBookIds().contains(book.getId()))
-                .map(book -> populateBorrowedBookList(libraryStatus, book)).count();
+                .map(this::populateBorrowedBookList).count();
         return libraryStatus;
     }
 
-    private Book populateBorrowedBookList(LibraryStatus libraryStatus, Book book) {
+    private LibraryStatus populateBorrowedBookList(Book book) {
         libraryStatus.getBorrowedBooks().add(book);
         libraryStatus.getRemainingBooks().remove(book);
         if (libraryStatus.getBorrowedBooks().size() > 2) {
             throw new LimitReachedException("Maximum borrowing limit reached");
         }
-        return book;
+        return libraryStatus;
+    }
+
+    public LibraryStatus returnOne(Book bookToReturn) {
+        var libStat = new LibraryStatus(libraryStatus.getBorrowedBooks(), libraryStatus.getRemainingBooks());
+        libStat.getBorrowedBooks().remove(bookToReturn);
+        libStat.getRemainingBooks().add(bookToReturn);
+        return libStat;
+    }
+
+    public LibraryStatus returnAll(List<Book> borrowedBooks) {
+        var libStat = new LibraryStatus(libraryStatus.getBorrowedBooks(), libraryStatus.getRemainingBooks());
+        libStat.getBorrowedBooks().removeAll(borrowedBooks);
+        libStat.getRemainingBooks().addAll(borrowedBooks);
+        return libStat;
     }
 }
