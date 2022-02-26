@@ -22,8 +22,8 @@ public class LibraryControllerImpl implements Library{
     }
 
     @Override
-    public ResponseEntity<List<Book>> getBooks() {
-        return ResponseEntity.ok(libraryService.getAllBooks());
+    public ResponseEntity<LibraryStatus> getBooks() {
+        return ResponseEntity.ok(libraryService.getLibraryStatus());
     }
 
     @Override

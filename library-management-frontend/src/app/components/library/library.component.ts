@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {LibraryService} from "../../services/library.service";
+// @ts-ignore
+import {v4 as uuidv4} from 'uuid';
 
 @Component({
   selector: 'app-library',
@@ -6,13 +9,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./library.component.css']
 })
 export class LibraryComponent implements OnInit {
-  givenWord ?: string;
-  notebookEntries ?: string;
-  frequencies: number = 0;
-  similarWords = [];
 
-  constructor() { }
+  constructor(private libraryService: LibraryService) {
+  }
 
   ngOnInit(): void {
+
   }
 }

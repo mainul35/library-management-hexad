@@ -15,7 +15,7 @@ import java.util.List;
 public interface Library {
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<List<Book>> getBooks();
+    ResponseEntity<LibraryStatus> getBooks();
 
     @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<LibraryStatus> addBooks(@RequestBody ReturningBooks returningBooks);

@@ -8,13 +8,21 @@ import { LibraryComponent } from './components/library/library.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import {FormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
+import { AddBookComponent } from './components/add-book/add-book.component';
+import { ShowBooksComponent } from './components/show-books/show-books.component';
+import { BorrowBookComponent } from './components/borrow-book/borrow-book.component';
+import { ReturnBookComponent } from './components/return-book/return-book.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     LibraryComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    AddBookComponent,
+    ShowBooksComponent,
+    BorrowBookComponent,
+    ReturnBookComponent
   ],
   imports: [
     BrowserModule,
