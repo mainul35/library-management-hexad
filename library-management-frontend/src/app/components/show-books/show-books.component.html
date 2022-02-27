@@ -1,0 +1,51 @@
+
+<app-alert [type]="type" [message]="message" *ngIf="display"></app-alert>
+
+
+<div class="row">
+  <div class="col-6">
+    <h4>Books in Library</h4>
+    <hr>
+    <table class="table">
+      <thead>
+      <tr>
+        <th scope="col">Book Name</th>
+        <th scope="col">Author Name</th>
+        <th scope="col">ISBN</th>
+        <th scope="col">Borrow</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr  *ngFor="let book of remainingBooks">
+        <td>{{book.bookName}}</td>
+        <td>{{book.authorName}}</td>
+        <td>{{book.isbn}}</td>
+        <td><button type="submit" class="btn btn-primary" (click)="borrowBook(book)">Borrow</button></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col-6">
+    <h4>Borrowed Books</h4>
+    <hr>
+    <table class="table">
+      <thead>
+      <tr>
+        <th scope="col">Book Name</th>
+        <th scope="col">Author Name</th>
+        <th scope="col">ISBN</th>
+        <th scope="col">Borrow</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr  *ngFor="let book of borrowedBooks">
+        <td>{{book.bookName}}</td>
+        <td>{{book.authorName}}</td>
+        <td>{{book.isbn}}</td>
+        <td><button type="submit" class="btn btn-primary" (click)="returnBook(book)">Return</button></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

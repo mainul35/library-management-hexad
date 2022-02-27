@@ -12,6 +12,7 @@ import { AddBookComponent } from './components/add-book/add-book.component';
 import { ShowBooksComponent } from './components/show-books/show-books.component';
 import { BorrowBookComponent } from './components/borrow-book/borrow-book.component';
 import { ReturnBookComponent } from './components/return-book/return-book.component';
+import { AlertComponent } from './components/alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { ReturnBookComponent } from './components/return-book/return-book.compon
     AddBookComponent,
     ShowBooksComponent,
     BorrowBookComponent,
-    ReturnBookComponent
+    ReturnBookComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,

@@ -53,11 +53,11 @@ public class LibraryService {
     }
 
     private LibraryStatus populateBorrowedBookList(Book book) {
-        libraryStatus.getBorrowedBooks().add(book);
-        libraryStatus.getRemainingBooks().remove(book);
-        if (libraryStatus.getBorrowedBooks().size() > 2) {
+        if (libraryStatus.getBorrowedBooks().size() + 1 > 2) {
             throw new LimitReachedException("Maximum borrowing limit reached");
         }
+        libraryStatus.getBorrowedBooks().add(book);
+        libraryStatus.getRemainingBooks().remove(book);
         return libraryStatus;
     }
 
