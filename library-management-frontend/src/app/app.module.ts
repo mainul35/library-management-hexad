@@ -10,8 +10,6 @@ import {FormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import { AddBookComponent } from './components/add-book/add-book.component';
 import { ShowBooksComponent } from './components/show-books/show-books.component';
-import { BorrowBookComponent } from './components/borrow-book/borrow-book.component';
-import { ReturnBookComponent } from './components/return-book/return-book.component';
 import { AlertComponent } from './components/alert/alert.component';
 
 @NgModule({
@@ -22,8 +20,6 @@ import { AlertComponent } from './components/alert/alert.component';
     NotFoundComponent,
     AddBookComponent,
     ShowBooksComponent,
-    BorrowBookComponent,
-    ReturnBookComponent,
     AlertComponent
   ],
   imports: [
