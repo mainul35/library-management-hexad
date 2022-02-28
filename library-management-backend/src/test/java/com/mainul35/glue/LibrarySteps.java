@@ -61,15 +61,13 @@ public class LibrarySteps {
 
     @When("^I view the books in the library$")
     public void iViewTheBooksInTheLibrary() throws JsonProcessingException {
-        actualBooks.addAll(Arrays.asList(
-                objectMapper.readValue(
-                        testRestTemplate.getForEntity("/api/books", String.class).getBody(), Book[].class)
-        ));
+        libraryStatus = objectMapper.readValue(
+                testRestTemplate.getForEntity("/api/books", String.class).getBody(), LibraryStatus.class);
     }
 
     @Then("^I see an empty library$")
     public void iSeeAnEmptyLibrary() {
-        Assertions.assertEquals(expectedBooks.size(), actualBooks.size());
+        Assertions.assertEquals(expectedBooks.size(), libraryStatus.getRemainingBooks().size());
         Assertions.assertEquals(0, actualBooks.size());
     }
 
@@ -91,7 +89,7 @@ public class LibrarySteps {
 
     @Then("I see the list of books in the library")
     public void iSeeTheListOfBooksInTheLibrary() {
-        Assertions.assertEquals(libraryService.getAllBooks().size(), actualBooks.size());
+        Assertions.assertEquals(libraryService.getAllBooks().size(), libraryStatus.getRemainingBooks().size());
     }
 
     @When("I choose a book to add to my borrowed list")

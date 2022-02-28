@@ -49,14 +49,22 @@ export class ShowBooksComponent implements OnInit {
           this.router.navigateByUrl('/show-books');
           },
       error => {
-        console.log(error)
         if (error.error.error === 'limit_reached_error') {
           this.message = error.error.message;
           this.type = 'danger'
           this.displayAction();
           this.reloadLibrary();
+        } else if (error.error.error === 'duplicate_entry') {
+          this.message = error.error.message;
+          this.type = 'danger'
+          this.displayAction();
+          this.reloadLibrary();
+        } else {
+          this.message = 'Unknown error. Please report and issue to mainuls18@gmail.com';
+          this.type = 'danger'
+          this.displayAction();
         }
-      })
+      });
   }
 
   returnBook(book: BookModel) {
@@ -72,15 +80,15 @@ export class ShowBooksComponent implements OnInit {
           this.remainingBooks = value.body.remainingBooks;
           this.router.navigateByUrl('/show-books');
         },
-        error => {
-          console.log(error)
-          if (error.error.error === 'limit_reached_error') {
-            this.message = error.error.message;
-            this.type = 'danger'
-            this.displayAction();
-            this.reloadLibrary();
-          }
-        })
+      error => {
+        console.log(error)
+        if (error.error.error === 'limit_reached_error') {
+          this.message = error.error.message;
+          this.type = 'danger'
+          this.displayAction();
+          this.reloadLibrary();
+        }
+      });
   }
 
   reloadLibrary () {

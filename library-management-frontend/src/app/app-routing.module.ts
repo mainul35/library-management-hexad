@@ -6,7 +6,7 @@ import {ShowBooksComponent} from "./components/show-books/show-books.component";
 import {LibraryComponent} from "./components/library/library.component";
 
 const routes: Routes = [
-  {path: '', component: LibraryComponent},
+  {path: '', component: AddBookComponent},
   {path: 'add-book', component: AddBookComponent},
   {path: 'show-books', component: ShowBooksComponent},
   {path: '**', component: NotFoundComponent},

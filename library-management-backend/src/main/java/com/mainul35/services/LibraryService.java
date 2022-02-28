@@ -3,6 +3,7 @@ package com.mainul35.services;
 import com.mainul35.dtos.request.BorrowingBooks;
 import com.mainul35.dtos.response.Book;
 import com.mainul35.dtos.response.LibraryStatus;
+import com.mainul35.exceptions.DuplicateEntryException;
 import com.mainul35.exceptions.LimitReachedException;
 import org.springframework.stereotype.Service;
 
@@ -56,9 +57,18 @@ public class LibraryService {
         if (libraryStatus.getBorrowedBooks().size() + 1 > 2) {
             throw new LimitReachedException("Maximum borrowing limit reached");
         }
+        handleDuplicates(book);
         libraryStatus.getBorrowedBooks().add(book);
         libraryStatus.getRemainingBooks().remove(book);
         return libraryStatus;
+    }
+
+    private void handleDuplicates(Book book) {
+        libraryStatus.getBorrowedBooks().stream().iterator().forEachRemaining(book1 -> {
+            if (book1.getIsbn().equals(book.getIsbn())) {
+                throw new DuplicateEntryException("Cannot add 2 books of same ISBN at a time");
+            }
+        });
     }
 
     public LibraryStatus returnOne(Book bookToReturn) {

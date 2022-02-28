@@ -14,6 +14,7 @@ import java.util.NoSuchElementException;
 public class RestExceptionHandler {
 
     public static final String LIMIT_REACHED_ERROR = "limit_reached_error";
+    public static final String DUPLICATE_ENTRY = "duplicate_entry";
     public static final String NO_ELEMENT_PRESENT = "no_element_present";
 
     /**
@@ -36,6 +37,17 @@ public class RestExceptionHandler {
         ErrorResponse response = new ErrorResponse(NO_ELEMENT_PRESENT, ex.getMessage());
         this.printStackTrace(ex);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * @param ex      LimitReachedException.class
+     * @return the ErrorResponse object
+     */
+    @ExceptionHandler(value = {DuplicateEntryException.class})
+    protected ResponseEntity<?> noSuchElement(DuplicateEntryException ex) {
+        ErrorResponse response = new ErrorResponse(DUPLICATE_ENTRY, ex.getMessage());
+        this.printStackTrace(ex);
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private void printStackTrace(Exception ex) {
