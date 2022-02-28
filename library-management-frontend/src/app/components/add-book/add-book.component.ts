@@ -7,6 +7,7 @@ import {LibraryService} from "../../services/library.service";
 import {ShowBooksComponent} from "../show-books/show-books.component";
 import {BehaviorSubject} from "rxjs";
 import {Router} from "@angular/router";
+import {timeout} from "rxjs/operators";
 
 @Component({
   selector: 'app-add-book',
@@ -20,6 +21,7 @@ export class AddBookComponent implements OnInit {
   type: string = '';
   message: string = '';
   display: boolean = false;
+  timeout: any;
 
   constructor(private libraryService: LibraryService, private router: Router) { }
 
@@ -27,6 +29,9 @@ export class AddBookComponent implements OnInit {
   }
 
   addBook() {
+    if (this.timeout !== null) {
+      clearTimeout(this.timeout);
+    }
     let book = new BookModel();
     book.bookName = this.bookName
     book.isbn = this.isbn
@@ -42,18 +47,23 @@ export class AddBookComponent implements OnInit {
         this.type = "success";
         this.message = "Note saved successfully"
         // @ts-ignore
-        this.router.navigateByUrl('/show-books')
+        // this.router.navigateByUrl('/show-books')
         this.displayAction();
       }, error => {
+        console.log(error)
         this.type = 'danger'
-        this.message = "Failed to save note. Check server logs"
+        if (error.error.error === "validation_error") {
+          this.message = error.error.message
+        } else {
+          this.message = "Failed to save note. Check server logs"
+        }
         this.displayAction();
       });
   }
 
   displayAction() {
     // @ts-ignore
-    setTimeout(() => {
+    this.timeout = setTimeout(() => {
       this.display = false;
     }, 5000);
     this.display = true;

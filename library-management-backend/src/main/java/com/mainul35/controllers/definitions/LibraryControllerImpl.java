@@ -7,10 +7,10 @@ import com.mainul35.dtos.response.LibraryStatus;
 import com.mainul35.services.LibraryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
+@Validated
 @RestController
 public class LibraryControllerImpl implements Library{
 

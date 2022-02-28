@@ -19,6 +19,7 @@ export class ShowBooksComponent implements OnInit {
   type: string = '';
   message: string = '';
   display: boolean = false;
+  timeout: any;
 
   constructor(private libraryService: LibraryService, private router: Router) {
   }
@@ -35,6 +36,9 @@ export class ShowBooksComponent implements OnInit {
   }
 
   borrowBook(book: BookModel) {
+    if (this.timeout !== null) {
+      clearTimeout(this.timeout);
+    }
     const borrowingBooks = new BorrowingBooks();
     if (book.id != null) {
       borrowingBooks.bookIds?.push(book.id);
@@ -68,7 +72,9 @@ export class ShowBooksComponent implements OnInit {
   }
 
   returnBook(book: BookModel) {
-
+    if (this.timeout !== null) {
+      clearTimeout(this.timeout);
+    }
     const returningBooks = new ReturningBooks();
     returningBooks.books = [book]
     this.libraryService.toReturn(returningBooks)
@@ -105,7 +111,7 @@ export class ShowBooksComponent implements OnInit {
 
   displayAction() {
     // @ts-ignore
-    setTimeout(() => {
+    this.timeout = setTimeout(() => {
       this.display = false;
     }, 5000);
     this.display = true;
